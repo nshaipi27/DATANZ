@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha db/test",
-    "coverage": "nyc mocha db/test"
+    "coverage": "nyc mocha db/test",
+    "start": "node backend/server.js",
+  "postinstall": "npm rebuild better-sqlite3"
   },
   "repository": {
     "type": "git",
