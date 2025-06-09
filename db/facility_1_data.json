@@ -1,0 +1,39 @@
+{
+  "facility_id": 1,
+  "wait_time": {
+    "facility_id": 1,
+    "average_wait_time_minutes": null,
+    "breakdown": []
+  },
+  "satisfaction": {
+    "average": null,
+    "total": 0,
+    "breakdown": []
+  },
+  "confidentiality": {
+    "average_percent_yes": null,
+    "total": 0,
+    "breakdown": []
+  },
+  "permission_before_exam": {
+    "average_percent_yes": null,
+    "total": 0,
+    "breakdown": []
+  },
+  "test_completion": {
+    "average_percent_yes": null,
+    "total": 0,
+    "breakdown": []
+  },
+  "medication_completion": {
+    "average_percent_yes": null,
+    "total": 0,
+    "breakdown": []
+  },
+  "payment_modes": {
+    "most_common": null,
+    "breakdown": []
+  },
+  "problem_areas": [],
+  "positive_areas": []
+}

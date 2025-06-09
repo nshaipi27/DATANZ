@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= __('all_facilities') %></title>
+  <link rel="stylesheet" href="/styles/facilities.css"/>
+</head>
+<body>
+
+  <header class="top-nav">
+    <div class="logo"><a href="/?lang=<%= currentLang %>"><%= __('site_name') %></a></div>
+
+    <ul class="nav-links">
+      <li><a href="/?lang=<%= currentLang %>"><%= __('home_page') %></a></li>
+      <li><a href="/auth?type=login&lang=<%= currentLang %>"><%= __('login') %></a></li>
+      <li>
+        <% const targetLang = currentLang === 'en' ? 'sw' : 'en'; %>
+        <a href="?lang=<%= targetLang %>">
+          <%= targetLang === 'sw' ? '🇰🇪 Swahili' : '🇬🇧 English' %>
+        </a>
+      </li>
+    </ul>
+  </header>
+
+<main class="scroll-container">
+  <!-- Filter Form Section -->
+  <section class="filter-container">
+    <h1 style = "text-align: center;"><%= __('find_facility') %></h1>
+
+    <form action="/<%= gov ? 'government/' : '' %>facilities" method="GET" class="filter-form">
+      <input type="hidden" name="lang" value="<%= currentLang %>" />
+      
+      <label class="filter-item">
+        <%= __('max_wait_time') %>
+        <input type="range" name="wait_time" min="0" max="140" value="60" id="waitTime"
+               oninput="updateWaitTime(this.value)" />
+        <span id="waitValue">60 <%= __('minutes') %></span>
+      </label>
+      
+      <label class="filter-item">
+        <%= __('satisfaction_label') %>
+        <select name="satisfaction">
+          <option value=""><%= __('not_important') %></option>
+          <% for (let i = 1; i <= 5; i++) { %>
+            <option value="<%= i %>"><%= i %></option>
+          <% } %>
+        </select>
+      </label>
+
+      <label class="filter-item">
+        <%= __('confidentiality_label') %>
+        <select name="confidentiality">
+          <option value=""><%= __('not_important') %></option>
+          <option value="somewhat"><%= __('somewhat') %></option>
+          <option value="very"><%= __('very_important') %></option>
+        </select>
+      </label>
+
+      <label class="filter-item">
+        <%= __('consent_label') %>
+        <select name="permission_before_exam">
+          <option value=""><%= __('not_important') %></option>
+          <option value="somewhat"><%= __('somewhat') %></option>
+          <option value="very"><%= __('very_important') %></option>
+        </select>
+      </label>
+
+      <label class="filter-item">
+        <%= __('tests_label') %>
+        <select name="received_all_tests">
+          <option value=""><%= __('not_important') %></option>
+          <option value="somewhat"><%= __('somewhat') %></option>
+          <option value="very"><%= __('very_important') %></option>
+        </select>
+      </label>
+
+      <label class="filter-item">
+        <%= __('meds_label') %>
+        <select name="received_all_meds">
+          <option value=""><%= __('not_important') %></option>
+          <option value="somewhat"><%= __('somewhat') %></option>
+          <option value="very"><%= __('very_important') %></option>
+        </select>
+      </label>
+
+      <label class="filter-item">
+        <%= __('payment_mode') %>
+        <select name="service_payment_mode">
+          <option value=""><%= __('any') %></option>
+          <option value="Free"><%= __('free') %></option>
+          <option value="Cash"><%= __('cash') %></option>
+          <option value="Insurance"><%= __('insurance') %></option>
+        </select>
+      </label>
+
+      <button type="submit" class="filter-button"><%= __('search') %></button>
+      <p class="view-link">
+        OR <a href="/facilities/map-view?lang=<%= currentLang %>"><%= __('view_nearby') %></a>
+      </p>
+    </form>
+  </section>
+
+
+
+  <!-- Facility Grid Section -->
+  <section class="facility-header">
+    <h1><%= __('all_facilities') %></h1>
+    <p><%= __('search_by_name') %></p>
+    <input type="text" id="facilitySearch" placeholder="<%= __('facility_name_placeholder') %>" />
+  </section>
+
+  <section class="facility-grid">
+    <!-- Pagination -->
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="?page=<%= page - 1 %>&lang=<%= currentLang %>" class="pagination-link"><%= __('prev') %></a>
+      <% } %>
+
+      <span><%= __('page') %> <%= page %> <%= __('of') %> <%= Math.ceil(1000 / 50) %></span>
+
+      <% if (page * 50 < 1000) { %>
+        <a href="?page=<%= page + 1 %>&lang=<%= currentLang %>" class="pagination-link"><%= __('next') %></a>
+      <% } %>
+    </div>
+
+    <div class="facility-cards">
+      <% facilities.forEach((facility) => { %>
+        <div class="facility-card">
+          <h2><%= facility.name %></h2>
+          <p>📍 <%= facility.location || __('unknown_location') %></p>
+          <p>🏥 <%= __('type') %>: <%= facility.type || __('unknown') %></p>
+          <a href="<%= gov ? '/government/facilities/' : '/facilities/' %><%= facility.facility_id %>?lang=<%= currentLang %>"><%= __('view_details') %></a>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+  </main>
+<br>
+  <button id="backToTop" class="back-to-top" title="<%= __('back_to_top') %>">↑</button>
+  <script>
+    const backToTopBtn = document.getElementById("backToTop");
+    const scrollContainer = document.querySelector(".scroll-container");
+
+    // Show the button when the scroll container is scrolled down
+    scrollContainer.addEventListener("scroll", () => {
+
+      if (scrollContainer.scrollTop > 0) {
+        backToTopBtn.classList.add("show");
+        console.log("done");
+      } else {
+        backToTopBtn.classList.remove("show");
+      }
+    });
+  
+    // Scroll to top of the container on click
+    backToTopBtn.addEventListener("click", () => {
+      scrollContainer.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+
+    function updateWaitTime(value) {
+      const minutesText = document.getElementById('waitValue').textContent.split(' ')[1];
+      document.getElementById('waitValue').innerText = value + ' ' + minutesText;
+    }
+  </script>
+</body>
+</html>

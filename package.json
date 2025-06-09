@@ -1,0 +1,36 @@
+{
+  "name": "project-2-a",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha db/test",
+    "coverage": "nyc mocha db/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cs-205-s25/project-2-a.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cs-205-s25/project-2-a/issues"
+  },
+  "homepage": "https://github.com/cs-205-s25/project-2-a#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.9.1",
+    "bootstrap": "^5.3.5",
+    "csv-parser": "^3.2.0",
+    "ejs": "^3.1.10",
+    "expres": "^0.0.5",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "i18n": "^0.15.1"
+  },
+  "devDependencies": {
+    "mocha": "^11.1.0",
+    "nyc": "^17.1.0"
+  }
+}

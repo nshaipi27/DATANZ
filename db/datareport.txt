@@ -1,0 +1,80 @@
+FACILITY DATA REPORT
+====================
+Facility ID: 1
+Date: 4/20/2025
+
+
+Average Wait Time Stats
+-----------------------
+  facility_id: 1
+  average_wait_time_minutes: null
+  breakdown: 
+
+
+Satisfaction Distribution
+-------------------------
+  average: null
+  total: 0
+  breakdown: 
+
+
+Confidentiality Stats
+---------------------
+  average_percent_yes: null
+  total: 0
+  breakdown: 
+
+
+Permission Before Exam Stats
+----------------------------
+  average_percent_yes: null
+  total: 0
+  breakdown: 
+
+
+Test Completion Stats
+---------------------
+  average_percent_yes: null
+  total: 0
+  breakdown: 
+
+
+Medication Completion Stats
+---------------------------
+  average_percent_yes: null
+  total: 0
+  breakdown: 
+
+
+Service Payment Modes
+---------------------
+  most_common: null
+  breakdown: 
+
+
+Problem Area Frequency
+----------------------
+No data available.
+
+
+Positive Area Frequency
+-----------------------
+No data available.
+
+
+Total Response Count
+--------------------
+  total_responses: 0
+
+
+Summary Stats
+-------------
+  questions_answered: 0
+  unique_answers_given: 0
+  unique_patients: 0
+
+
+Latest Responses from March 1, 2025
+-----------------------------------
+No data available.
+

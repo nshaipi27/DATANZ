@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title><%= __('site_name') %></title>
+  <link rel="stylesheet" href="/styles/government.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="top-nav">
+    <div class="logo"><a href="/?lang=<%= currentLang %>" id="datanzLink"><%= __('site_name') %></a></div>
+
+    <ul class="nav-links">
+      <div class="dropdown">
+        <li class="dropbtn"><%= __('actions') %></li>
+        <div class="dropdown-content">
+          <a href="/government?lang=<%= currentLang %>"><%= __('home') %></a>
+          <a href="/government/worst?lang=<%= currentLang %>"><%= __('worst_facilities') %></a>
+          <a href="/government/advanced-search?lang=<%= currentLang %>"><%= __('advanced_search') %></a>
+        </div>
+      </div>
+      <li><a href="/auth/logout?lang=<%= currentLang %>"><%= __('sign_out') %></a></li>
+      <li>
+        <% const targetLang = currentLang === 'en' ? 'sw' : 'en'; %>
+        <a href="?lang=<%= targetLang %>">
+          <%= targetLang === 'sw' ? '🇰🇪 Swahili' : '🇬🇧 English' %>
+        </a>
+      </li>
+    </ul>
+  </header>
+  <h1 style = "margin: 10px "><%= __('welcome_dashboard') %> <%= username %></h1>
+
+  <main style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem;">
+    <div style="min-width: 700px; padding-left: 100px; display: flex; flex-direction: column; gap: 20px;">
+      <!-- Graph + Dropdown -->
+      <section class="page" style="text-align: left; ">
+        <div class="filter-group">
+          <label for="trendFacilitySelect" style="text-align: center;"><%= __('select_facility') %></label>
+          <select id="trendFacilitySelect" style="font-size: 12px; width: 180px;">
+            <option value="all" selected><%= __('all_facilities_default') %></option>
+            <optgroup label="<%= __('by_facility') %>">
+              <% results.forEach(facility => { %>
+                <option value="facility-<%= facility.facility_id %>"><%= facility.name %></option>
+              <% }); %>
+            </optgroup>
+            <optgroup label="By Region">
+              <option value="region-Arusha">Arusha</option>
+              <option value="region-Kilimanjaro">Kilimanjaro</option>
+              <option value="region-Tanga">Tanga</option>
+            </optgroup>
+          </select>
+        </div>
+        <div style="width: 100%; height: 350px;">
+          <canvas id="timeTrendChart" style="width: 700px; height: 100%;"></canvas>
+        </div>
+        <br>
+        <h4 style = "text-align: center; font-size: 14px;"><%= __('facilities_near_you') %></h4><br>
+        <div id="map" style="width: 550px; height: 200px; display: block;"></div>
+
+      </section>
+
+
+      <!-- MAP (visible or hidden placeholder) -->
+    
+    </div>
+  <div style="flex: 1; max-width: 800px; padding-right: 50px;margin-top:50px">
+    <section class="page" style="width: 100%;">
+      <div class="scroll-wrapper" style="width: 100%;">
+        <h2 style="font-size: 16px; margin: 0 0"><%= __('below_average_facilities') %> <%= countBelowAverage %></h2>
+        <button class="scroll-arrow left" onclick="lefti('worstScroll')">&#8249;</button>
+        <div class="scroll-container" id="worstScroll" style="max-height: 150px; gap: 6px;">
+          <% belowAverage.forEach(facility => { %>
+            <div class="card" style="font-size: 12px; height: 120px; width: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+              <h3 style="margin: 20px 0; font-size: 13px;"><%= facility.name %></h3>
+              <button class="btn-app" onclick='openFacilityPopup(<%= JSON.stringify(facility).replace(/</g, '\u003c') %>)'><%= __('view_details') %></button>
+            </div>
+          <% }); %>
+        </div>
+        <button class="scroll-arrow right" onclick="scrollRight('worstScroll')">&#8250;</button>
+      </div>
+
+      <div class="scroll-wrapper" style="width: 100%;">
+        <h2 style="font-size: 16px; margin: 0px 0"><%= __('worst_facilities_heading') %></h2>
+        <button class="scroll-arrow left" onclick="lefti('worstScroll2')">&#8249;</button>
+        <div class="scroll-container" id="worstScroll2" style="max-height: 150px; gap: 6px;">
+          <% bottomTenWorst.forEach(facility => { %>
+            <div class="card" style="font-size: 12px; height: 120px; width: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+              <h3 style="margin: 20px 0; font-size: 13px;"><%= facility.name %></h3>
+              <button class="btn-app" onclick='openFacilityPopup(<%= JSON.stringify(facility).replace(/</g, '\u003c') %>)'><%= __('view_details') %></button>
+            </div>
+          <% }); %>
+        </div>
+        <button class="scroll-arrow right" onclick="scrollRight('worstScroll2')">&#8250;</button>
+      </div>
+
+      <div class="scroll-wrapper" style="width: 100%;">
+        <h2 style="font-size: 16px; margin: 0px 0"><%= __('best_facilities') %></h2>
+        <button class="scroll-arrow left" onclick="lefti('bestScroll')">&#8249;</button>
+        <div class="scroll-container" id="bestScroll" style="max-height: 150px; gap: 6px;">
+          <% topThreeBest.forEach(facility => { %>
+            <div class="card" style="font-size: 12px; height: 120px; width: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+              <h3 style="margin: 20px 0; font-size: 13px;"><%= facility.name %></h3>
+              <button class="btn-app" onclick='openFacilityPopup(<%= JSON.stringify(facility).replace(/</g, '\u003c') %>)'><%= __('view_details') %></button>
+            </div>
+          <% }); %>
+        </div>
+        <button class="scroll-arrow right" onclick="scrollRight('bestScroll')">&#8250;</button>
+        <br>
+        <div style = "float: right; text-align: right; font-weight:bold">
+        <p><a href = "/government/worst"><%= __('find_worst_by_criteria') %></a></p>
+        <p><a href = "/government/advanced-search"><%= __('advanced_search_link') %></a></p>
+      </div>
+      </div>
+      
+    </section>
+
+  <div id="facilityModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeFacilityPopup()">&times;</span>
+      <h2 id="modalFacilityName"></h2>
+      <table>
+        <thead>
+          <tr>
+            
+              <th><%= __('modal_headers.name') %></th>
+              <th><%= __('modal_headers.code') %></th>
+              <th><%= __('modal_headers.location') %></th>
+              <th><%= __('modal_headers.avg_wait') %></th>
+              <th><%= __('modal_headers.avg_sat') %></th>
+              <th><%= __('modal_headers.no_privacy') %></th>
+              <th><%= __('modal_headers.no_permission') %></th>
+              <th><%= __('modal_headers.missed_tests') %></th>
+              <th><%= __('modal_headers.missed_meds') %></th>
+              <th><%= __('modal_headers.top_payment') %></th>
+              <th><%= __('modal_headers.top_problems') %></th>
+              <th><%= __('modal_headers.top_positives') %></th>
+            </tr>
+        </thead>
+        <tbody id="modalFacilityDetails">
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+</main>
+<button id="backToTop" class="back-to-top" title="<%= __('go_to_top') %>">↑</button>
+
+</body>
+<script src="/js/government.js"></script>
+<script>
+  const facilities = <%- JSON.stringify(results) %>;
+
+  function initMap() {
+  const tanzaniaCenter = { lat: -3.383545, lng:  36.689744};
+  const map = new google.maps.Map(document.getElementById("map"), {
+  zoom: 13,
+  center: tanzaniaCenter,
+  });
+  const market = new google.maps.Marker({
+      position: tanzaniaCenter,
+      map: map,
+      title: "Tanzania Center",
+  
+  });
+  facilities.forEach(facility => {
+  const marker = new google.maps.Marker({
+      position: { lat: facility.ltd, lng: facility.lng },
+      map: map,
+      title: facility.name
+  });
+
+  if(facility.metrics.avgWeight <= 3){
+      marker.setIcon({
+      url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+      scaledSize: new google.maps.Size(30, 30) // Adjust size as needed
+      });
+  } else if (facility.metrics.avgWeight > 3 && facility.metrics.avgWeight <= 4) {
+      marker.setIcon({
+      url: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+      scaledSize: new google.maps.Size(30, 30) // Adjust size as needed
+      });
+  } else if (facility.metrics.avgWeight > 4 && facility.metrics.avgWeight <= 5) {
+      marker.setIcon({
+      url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+      scaledSize: new google.maps.Size(30, 30) // Adjust size as needed
+      });
+  }
+
+  const infoWindow = new google.maps.InfoWindow({
+  content: `<strong><a href="/facilities/${facility.facility_id}">${facility.name}</a></strong>`
+  });
+
+
+  marker.addListener("click", () => {
+      infoWindow.open(map, marker);
+  });
+  });
+  }
+</script>
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAPS_API_KEY %>&callback=initMap">
+</script>
+</html>

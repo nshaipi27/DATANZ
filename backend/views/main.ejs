@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="<%= currentLang %>">
+  <head>
+    <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= __('site_name') %> - <%= __('healthcare_guide') %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+
+    <header class="top-nav">
+    <div class="logo"><a href="/?lang=<%= currentLang %>"><%= __('site_name') %></a></div>
+
+    <ul class="nav-links">
+      <li class="dropdown">
+        <button class="dropbtn"><%= __('menu') %></button>
+        <div class="dropdown-content">
+          <a href="/?lang=<%= currentLang %>"><%= __('home_page') %></a>
+          <a href="#mission"><%= __('our_mission') %></a>
+          <a href="#team"><%= __('our_team') %></a>
+        </div>
+      </li>
+      <li><a href="/facilities?lang=<%= currentLang %>"><%= __('view_facilities') %></a></li>
+      <li><a href="/auth?type=login&lang=<%= currentLang %>"><%= __('login') %></a></li>
+      <li>
+        <% const targetLang = currentLang === 'en' ? 'sw' : 'en'; %>
+        <a href="?lang=<%= targetLang %>">
+          <%= targetLang === 'sw' ? '🇰🇪 Swahili' : '🇬🇧 English' %>
+        </a>
+      </li>
+    </ul>
+  </header>
+
+    <main class="scroll-container">
+      <section class="hero">
+        <div class="hero-content">
+          <h1><%= __('welcome_to') %> <%= __('site_name') %></h1>
+          <h2><%= __('hero_tagline') %></h2>
+          <p><%= __('hero_description') %></p>
+      
+          <div class="hero-buttons">
+            <a href="/facilities?lang=<%= currentLang %>" class="hero-btn">
+              <%= __('view_facilities') %>
+            </a>
+            <a href="/auth?type=login&lang=<%= currentLang %>" class="hero-btn">
+              <%= __('log_in') %>
+            </a>
+          </div>
+      
+          <p class="login-msg"><%= __('government_official_prompt') %></p>
+        </div>
+      </section>
+      
+
+      <section id="mission" class="mission-section">
+        <div class="mission-container">
+          <h2><i class="fas fa-bullseye icon"></i> <%= __('our_mission') %></h2>
+      
+          <p><i class="fas fa-heart icon"></i> <%= __('mission_paragraph1') %></p>
+          <p><i class="fas fa-hand-holding-medical icon"></i> <%= __('mission_paragraph2') %></p>
+          <p><i class="fas fa-universal-access icon"></i> <%= __('mission_paragraph3') %></p>
+        </div>
+      </section>
+      
+      
+ 
+    <section id="team" class="team-section">
+      <h2><%= __('our_team') %></h2>
+      <div class="team-cards">
+        <% const team = [
+          {img: '/assets/nora.jpeg', alt: 'Nora Shaipi', name: 'Nora Shaipi', role: 'Full-Stack Engineer'},
+          {img: '/assets/john.png', alt: 'John Liedtka', name: 'John Liedtka', role: 'Testing Engineer'},
+          {img: '/assets/omi.png', alt: 'Naomi Yilma', name: 'Naomi Yilma', role: 'Back-End Engineer'},
+          {img: '/assets/Landy.png', alt: 'Landy Rakotoarison', name: 'Landy Rakotoarison', role: 'Full-Stack Engineer'}
+        ]; %>
+        <% team.forEach(member => { %>
+        <div class="team-card">
+          <img src="<%= member.img %>" alt="<%= member.alt %>" />
+          <h3><%= member.name %></h3>
+          <p><%= __(member.role.replace(/ /g, '_').toLowerCase()) %></p>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+
+  </main>
+  <button id="backToTop" class="back-to-top" title="<%= __('back_to_top') %>">↑</button>
+
+  <script>
+    const backToTopBtn = document.getElementById("backToTop");
+    const scrollContainer = document.querySelector(".scroll-container");
+  
+    scrollContainer.addEventListener("scroll", () => {
+      if (scrollContainer.scrollTop > 0) {
+        backToTopBtn.classList.add("show");
+      } else {
+        backToTopBtn.classList.remove("show");
+      }
+    });
+  
+    backToTopBtn.addEventListener("click", () => {
+      scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+  
+  </body>
+</html>
