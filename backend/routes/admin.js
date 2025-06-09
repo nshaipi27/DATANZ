@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { connectToDatabase } = require('../../db/database');
 const db = connectToDatabase();
 const AuthModel = require('../../db/models/AuthModel');

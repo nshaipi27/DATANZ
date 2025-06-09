@@ -1,5 +1,4 @@
-
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 /* This will ensure login info */
 
 class AuthModel {
@@ -71,18 +70,7 @@ findByUsername(username) {
   }
 
   async validatePassword(inputPassword, hashedPassword) {
-    return await bcrypt.compare
- /*   const query = `
-      SELECT password FROM Auth WHERE email = ?
-    `;
-    
-    const stmt = this.db.prepare(query);
-    const row = stmt.get(email);
-  
-    if (!row) return false; 
-    const match = await this.bcrypt.compare(inputPassword, row.password);
-  
-    return match;*/
+    return await bcrypt.compare(inputPassword, hashedPassword);
   }
   
   getAllUsersByRole(role) {
